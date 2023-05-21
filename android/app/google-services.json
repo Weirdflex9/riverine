@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "197635723803",
+    "project_id": "riverine-19a38",
+    "storage_bucket": "riverine-19a38.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197635723803:android:24c116bd11c38760981ebe",
+        "android_client_info": {
+          "package_name": "com.blend.riverine"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "197635723803-bpojfh22ebbv6mr9inmdldu32k0m20qj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZRiqrCpY8NHTDTZpKq3WgxuKu4EgAgIo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "197635723803-bpojfh22ebbv6mr9inmdldu32k0m20qj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

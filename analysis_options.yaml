@@ -1,0 +1,15 @@
+include: package:lints/recommended.yaml
+analyzer:
+  exclude:
+    - "lib/entity/**"
+    - "lib/generated/json/**"
+  errors:
+    missing_required_param: warning
+    missing_return: warning
+    todo: ignore
+linter:
+  rules:
+    constant_identifier_names: false
+    prefer_single_quotes: true
+    avoid_empty_else: true
+    avoid_shadowing_type_parameters: false
