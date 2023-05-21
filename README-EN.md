@@ -29,3 +29,8 @@ Riverine
 |   |-- widget          - diy
 |   |-- main.dart       - entrance of App
 ```
+
+### Android Studio Plugins
+
+1.FlutterJsonBeanFactory
+2.GetX

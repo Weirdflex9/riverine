@@ -28,3 +28,9 @@ Riverine
 |   |-- util            - 工具类
 |   |-- widget          - 自定义组件
 |   |-- main.dart       - 应用入口
+```
+
+### Android Studio 插件
+
+1.FlutterJsonBeanFactory
+2.GetX

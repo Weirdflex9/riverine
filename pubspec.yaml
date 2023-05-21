@@ -14,8 +14,6 @@ dependencies:
   get: ^4.6.5
   get_storage: ^2.1.1
   dio: ^5.1.2
-  cookie_jar: ^4.0.2
-  dio_cookie_manager: ^3.0.0
   flutter_screenutil: ^5.8.1
   flutter_easyloading: ^3.0.5
   flutter_easyrefresh: 2.2.1

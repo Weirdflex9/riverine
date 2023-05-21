@@ -28,8 +28,8 @@
     </queries>
 
     <application
-        android:label="riverine"
         android:name="${applicationName}"
+        android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
         <activity
