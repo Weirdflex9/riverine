@@ -18,41 +18,56 @@ class CameraAlbumLogic extends GetxController {
   void addImage() async {
     Get.bottomSheet(
       CupertinoActionSheet(
-        actions: [
+        actions: <Widget>[
           CupertinoActionSheetAction(
             child: Text(
               'Camera'.tr,
             ),
             onPressed: () async {
               Get.back();
-              final result = await CameraPicker.pickFromCamera(Get.context!);
-              if (result != null) {
-                File? _file = await result.file;
-                if (_file != null) {
-                  Loading.show();
-                  final _fileNames = _file.path.split('/');
-                  final storageRef = FirebaseStorage.instance
-                      .ref()
-                      .child('delivery')
-                      .child('${DateTime.now().microsecondsSinceEpoch}_${Uri.encodeComponent(_fileNames[_fileNames.length - 1])}');
-                  try {
-                    var _compressed = await FlutterImageCompress.compressWithFile(
-                      _file.absolute.path,
-                      minWidth: 600,
-                      quality: 50,
-                    );
-                    if (_compressed != null) {
-                      await storageRef.putData(_compressed);
-                      String _url = await storageRef.getDownloadURL();
+              bool hasPermission = await PermissionUtil.requestAuthPermission(Permission.camera);
+              if (hasPermission) {
+                final result = await CameraPicker.pickFromCamera(Get.context!);
+                if (result != null) {
+                  File? _file = await result.file;
+                  if (_file != null) {
+                    Loading.show();
+                    final _fileNames = _file.path.split('/');
+                    final storageRef = FirebaseStorage.instance
+                        .ref()
+                        .child('delivery')
+                        .child('${DateTime.now().microsecondsSinceEpoch}_${Uri.encodeComponent(_fileNames[_fileNames.length - 1])}');
+                    try {
+                      var _compressed = await FlutterImageCompress.compressWithFile(
+                        _file.absolute.path,
+                        minWidth: 600,
+                        quality: 50,
+                      );
+                      if (_compressed != null) {
+                        await storageRef.putData(_compressed);
+                        String _url = await storageRef.getDownloadURL();
+                        Loading.dismiss();
+                        state.items.add(ImagePickEntity()..url = _url);
+                        update();
+                      }
+                    } on FirebaseException catch (e) {
+                      Toast.show(e.message ?? 'image upload error');
                       Loading.dismiss();
-                      state.items.add(ImagePickEntity()..url = _url);
-                      update();
                     }
-                  } on FirebaseException catch (e) {
-                    Toast.show(e.message ?? 'image upload error');
-                    Loading.dismiss();
                   }
                 }
+              } else {
+                Get.dialog(
+                  Warning(
+                    content: 'Have not permission of camera'.tr,
+                    confirm: 'Jump to Settings'.tr,
+                    onCancel: () {},
+                    onConfirm: () async {
+                      await openAppSettings();
+                    },
+                  ),
+                  barrierDismissible: false,
+                );
               }
             },
           ),
