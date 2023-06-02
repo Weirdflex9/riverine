@@ -42,14 +42,17 @@ flutter run --release
 ```
 
 ### 关于作者
-GitHub : [Weirdflex9](https://github.com/Weirdflex9)  
+```
+GitHub : [Weirdflex9](https://github.com/Weirdflex9) 
 Flutter交流QQ群 &nbsp;&nbsp;: 532403442(群内昵称：菜蛆|宁波|Flutter)
 Email &nbsp;&nbsp;: 83962496@qq.com
 QQ &nbsp;&nbsp;: 83962496
 有任何问题欢迎随时联系我，提issue或加群或联系邮件或加qq~
+```
 
 
 ### Android Studio 插件
-
+```
 1.FlutterJsonBeanFactory 用来json转model，android studio插件市场里搜索一下，本人觉得挺好用的，比较适配dio网络请求的泛型
 2.GetX Getx的脚手架生成工具，android studio插件市场里搜索一下，在此鸣谢作者@小呆呆，使用教程网上一搜就有，很多~
+```
