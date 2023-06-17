@@ -43,11 +43,9 @@ flutter run --release
 
 ### 关于作者
 ```
-GitHub : [Weirdflex9](https://github.com/Weirdflex9) 
-Flutter交流QQ群: 532403442(群内昵称：菜蛆|宁波|Flutter)
-Email: 83962496@qq.com
-QQ: 83962496
-有任何问题欢迎随时联系我，提issue或加群或联系邮件或加qq~
+GitHub : [fortnightmoon](https://github.com/fortnightmoon) 
+Flutter交流QQ群: 532403442
+Email: lifecoolcn@163.com
 ```
 
 
