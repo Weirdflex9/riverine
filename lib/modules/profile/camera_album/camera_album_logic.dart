@@ -25,8 +25,8 @@ class CameraAlbumLogic extends GetxController {
             ),
             onPressed: () async {
               Get.back();
-              bool hasPermission = await PermissionUtil.requestAuthPermission(Permission.camera);
-              if (hasPermission) {
+              final _applyResult = await PermissionUtil.awaitPermission([Permission.camera]);
+              if (_applyResult == ApplyResultType.success) {
                 final result = await CameraPicker.pickFromCamera(Get.context!);
                 if (result != null) {
                   File? _file = await result.file;
@@ -56,6 +56,8 @@ class CameraAlbumLogic extends GetxController {
                     }
                   }
                 }
+              } else if (_applyResult == ApplyResultType.failure) {
+                Toast.show('申请相机权限失败');
               } else {
                 Get.dialog(
                   Warning(
@@ -72,57 +74,73 @@ class CameraAlbumLogic extends GetxController {
             },
           ),
           CupertinoActionSheetAction(
-            child: Text(
-              'Album'.tr,
-            ),
-            onPressed: () async {
-              Get.back();
-              List<AssetEntity>? assets = await AssetPicker.pickAssets(
-                Get.context!,
-                pickerConfig: AssetPickerConfig(
-                  selectedAssets: [],
-                  maxAssets: 4 - state.items.length,
-                  requestType: RequestType.image,
-                  specialItemPosition: SpecialItemPosition.none,
-                  limitedPermissionOverlayPredicate: (permissionState) => false,
-                ),
-              );
-              if (ObjectUtil.isNotEmpty(assets)) {
-                List<ImagePickEntity> _list = [];
-                Loading.show();
-                for (AssetEntity assetEntity in assets!) {
-                  File? _file = await assetEntity.originFile;
-                  if (_file == null) {
-                    return;
-                  }
-                  final _fileNames = _file.path.split('/');
-                  final storageRef = FirebaseStorage.instance
-                      .ref()
-                      .child('delivery')
-                      .child('${DateTime.now().microsecondsSinceEpoch}_${Uri.encodeComponent(_fileNames[_fileNames.length - 1])}');
-                  try {
-                    var _compressed = await FlutterImageCompress.compressWithFile(
-                      _file.absolute.path,
-                      minWidth: 600,
-                      quality: 50,
-                    );
-                    if (_compressed != null) {
-                      await storageRef.putData(_compressed);
-                      String _url = await storageRef.getDownloadURL();
-                      _list.add(ImagePickEntity()..url = _url);
+              child: Text(
+                'Album'.tr,
+              ),
+              onPressed: () async {
+                Get.back();
+                final _applyResult = await PermissionUtil.awaitPermission(Device.isIOS ? [Permission.photos] : [Permission.storage]);
+                if (_applyResult == ApplyResultType.success) {
+                  List<AssetEntity>? assets = await AssetPicker.pickAssets(
+                    Get.context!,
+                    pickerConfig: AssetPickerConfig(
+                      selectedAssets: [],
+                      maxAssets: 4 - state.items.length,
+                      requestType: RequestType.image,
+                      specialItemPosition: SpecialItemPosition.none,
+                      limitedPermissionOverlayPredicate: (permissionState) => false,
+                    ),
+                  );
+                  if (ObjectUtil.isNotEmpty(assets)) {
+                    List<ImagePickEntity> _list = [];
+                    Loading.show();
+                    for (AssetEntity assetEntity in assets!) {
+                      File? _file = await assetEntity.originFile;
+                      if (_file == null) {
+                        return;
+                      }
+                      final _fileNames = _file.path.split('/');
+                      final storageRef = FirebaseStorage.instance
+                          .ref()
+                          .child('delivery')
+                          .child('${DateTime.now().microsecondsSinceEpoch}_${Uri.encodeComponent(_fileNames[_fileNames.length - 1])}');
+                      try {
+                        var _compressed = await FlutterImageCompress.compressWithFile(
+                          _file.absolute.path,
+                          minWidth: 600,
+                          quality: 50,
+                        );
+                        if (_compressed != null) {
+                          await storageRef.putData(_compressed);
+                          String _url = await storageRef.getDownloadURL();
+                          _list.add(ImagePickEntity()..url = _url);
+                        }
+                      } on FirebaseException catch (e) {
+                        Toast.show(e.message ?? 'image upload error');
+                        Loading.dismiss();
+                        return;
+                      }
                     }
-                  } on FirebaseException catch (e) {
-                    Toast.show(e.message ?? 'image upload error');
                     Loading.dismiss();
-                    return;
+                    state.items.addAll(_list);
+                    update();
                   }
+                } else if (_applyResult == ApplyResultType.failure) {
+                  Toast.show('申请相册权限失败');
+                } else {
+                  Get.dialog(
+                    Warning(
+                      content: 'Have not permission of album'.tr,
+                      confirm: 'Jump to Settings'.tr,
+                      onCancel: () {},
+                      onConfirm: () async {
+                        await openAppSettings();
+                      },
+                    ),
+                    barrierDismissible: false,
+                  );
                 }
-                Loading.dismiss();
-                state.items.addAll(_list);
-                update();
-              }
-            },
-          ),
+              }),
         ],
         cancelButton: CupertinoActionSheetAction(
           onPressed: () => Get.back(),

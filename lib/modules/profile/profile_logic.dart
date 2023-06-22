@@ -27,10 +27,11 @@ class ProfileLogic extends GetxController {
   }
 
   void toScan() async {
-    bool hasPermission = await PermissionUtil.requestAuthPermission(Permission.camera);
-    if (hasPermission) {
+    final _applyResult = await PermissionUtil.awaitPermission([Permission.camera]);
+    if (_applyResult == ApplyResultType.success) {
       var _scanResult = await Get.toNamed(RouteConfig.scan);
-      //todo scan result
+    } else if (_applyResult == ApplyResultType.failure) {
+      Toast.show('申请相机权限失败');
     } else {
       Get.dialog(
         Warning(
