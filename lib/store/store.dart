@@ -36,10 +36,7 @@ class StoreLogic extends GetxController {
     if (GetStorage().hasData(Constant.keyToken) && GetStorage().hasData(Constant.keyUser)) {
       _changeLoginStatus(true);
       userEntity.value = UserEntity.fromJson(GetStorage().read<Map<String, dynamic>>(Constant.keyUser)!);
-      final result = await Http().network<UserEntity>(
-        Method.post,
-        Api.userInfo,
-      );
+      final result = await Http().post<UserEntity>(Api.userInfo);
       if (result.success) {
         userEntity.value = result.content!;
         await GetStorage().write(Constant.keyUser, result.content!);
