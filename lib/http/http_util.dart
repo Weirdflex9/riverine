@@ -11,7 +11,6 @@ import 'package:riverine/store/store.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
-import 'package:get_storage/get_storage.dart';
 
 Duration _connectTimeout = Duration(seconds: 15);
 Duration _receiveTimeout = Duration(seconds: 15);
@@ -44,12 +43,27 @@ class Http {
 
   Dio get dio => _dio;
 
+  Future<BaseEntity<T>> get<T>(String url, {Map<String, dynamic>? params}) {
+    return _network(Method.get, url, params: params);
+  }
+
+  Future<BaseEntity<T>> post<T>(String url, {Map<String, dynamic>? params}) {
+    return _network(Method.post, url, params: params);
+  }
+
+  Future<BaseEntity<T>> put<T>(String url, {Map<String, dynamic>? params}) {
+    return _network(Method.put, url, params: params);
+  }
+
+  Future<BaseEntity<T>> delete<T>(String url, {Map<String, dynamic>? params}) {
+    return _network(Method.delete, url, params: params);
+  }
+
   ///await/async方式
-  Future<BaseEntity<T>> network<T>(
+  Future<BaseEntity<T>> _network<T>(
     Method method,
     String url, {
-    dynamic params,
-    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? params,
     CancelToken? cancelToken,
     Options? options,
   }) async {
@@ -58,7 +72,7 @@ class Http {
         method.value,
         url,
         data: params,
-        queryParameters: queryParameters,
+        queryParameters: params,
         options: options,
         cancelToken: cancelToken,
       );

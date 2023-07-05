@@ -13,10 +13,9 @@ class HomeLogic extends GetxController with GetSingleTickerProviderStateMixin {
   }
 
   Future<void> _query(int currentPage) async {
-    final result = await Http().network<ArticleListEntity>(
-      Method.get,
+    final result = await Http().get<ArticleListEntity>(
       sprintf(Api.articleList, [state.currentPage]),
-      queryParameters: {'page_size': 20},
+      params: {'page_size': 20},
     );
     Loading.dismiss();
     state.refreshController.finishRefresh();
